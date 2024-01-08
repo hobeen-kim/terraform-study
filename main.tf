@@ -1,9 +1,8 @@
-variable "my_password" {
-  default = "my_password"
-  sensitive = true
+variable "my_var" {
+  default = "Hello World"
 }
 
 resource "local_file" "abc" {
-  content = var.my_password
+  content = var.my_var
   filename = "${path.module}/abc.txt"
 }
