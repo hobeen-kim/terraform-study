@@ -1,12 +1,16 @@
+
+variable "names" {
+  type = list(string)
+  default = ["a", "b", "c"]
+}
 resource "local_file" "abc" {
-  content = "abc123"
-  filename = "${path.module}/abc.txt"
+  count    = length(var.names)
+  content  = "abc"
+  filename = "${path.module}/abc-${var.names[count.index]}.txt"
 }
 
-output "file_id" {
-  value = local_file.abc.id
-}
-
-output "file_abspath" {
-  value = abspath(local_file.abc.filename)
+resource "local_file" "def" {
+  count = length(var.names)
+  content = local_file.abc[count.index].content
+  filename = "${path.module}/def-${element(var.names, count.index)}.txt"
 }
