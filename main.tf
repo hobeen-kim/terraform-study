@@ -1,8 +1,21 @@
-resource "local_file" "abc" {
-  for_each = {
-    a = "content a"
-    c = "content c"
+variable "names" {
+  default = {
+    a = "hello a"
+    b = "hello b"
+    c = "hello c"
   }
-  content = each.value
-  filename = "${path.module}/${each.key}.txt"
+}
+
+data "archive_file" "dotfiles" {
+  type        = "zip"
+  output_path = "${path.module}/dotfiles.zip"
+
+  dynamic "source" {
+    for_each = var.names
+
+    content {
+      content  = source.value
+      filename = "${path.module}/${source.key}.txt"
+    }
+  }
 }
